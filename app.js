@@ -3,14 +3,19 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require("mongoose");
 
+var config = require("./config");
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var success = require('./routes/success');
 
 var app = express();
 
+mongoose.connect(config.mongoUri);
+
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -20,6 +25,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/success', success);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
